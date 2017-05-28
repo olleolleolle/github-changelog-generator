@@ -16,5 +16,11 @@ task :update_ssl_ca_file do
   `pushd lib/github_changelog_generator/ssl_certs && curl --remote-name --time-cond cacert.pem https://curl.haxx.se/ca/cacert.pem && popd`
 end
 
+desc "To update GitHub GraphQL metadata"
+task :update_github_graphql do
+  require "github_changelog_generator/graphql_fetcher"
+  GraphQL::Client.dump_schema(GitHubChangelogGenerator::GitHubGraphqlApi::HTTP, "lib/github_changelog_generator/graphql/schema.json")
+end
+
 task checks: %i[rubocop rspec]
 task default: %i[rubocop rspec]

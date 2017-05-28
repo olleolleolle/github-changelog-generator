@@ -32,4 +32,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency("activesupport")
   spec.add_runtime_dependency("retriable", ["~> 3.0"])
   spec.add_runtime_dependency("multi_json")
+  spec.add_runtime_dependency("graphql-client")
 end
