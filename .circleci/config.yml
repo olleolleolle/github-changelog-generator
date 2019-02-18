@@ -2,7 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-ruby/ for more details
 #
-version: 2.0
+version: 2.1
 
 shared: &shared
   steps:
@@ -14,28 +14,36 @@ shared: &shared
           bundle install --jobs=4 --retry=3 --path vendor/bundle
 
     - run:
-        name: Run Rubocop checks
-        command: |
-          bundle exec rubocop
-
-    - run:
         name: Run tests
         command: |
           bundle exec rspec --color --require spec_helper spec --format progress
 
 jobs:
+  "rubocop":
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - run: bundle exec rubocop
+    docker:
+      - image: circleci/ruby:2.6.1-node-browsers
   "ruby-2.3":
     <<: *shared
     docker:
-      - image: circleci/ruby:2.3.7-node-browsers
+      - image: circleci/ruby:2.3.8-node-browsers
   "ruby-2.4":
     <<: *shared
     docker:
-      - image: circleci/ruby:2.4.4-node-browsers
+      - image: circleci/ruby:2.4.5-node-browsers
   "ruby-2.5":
     <<: *shared
     docker:
-      - image: circleci/ruby:2.5.1-node-browsers
+      - image: circleci/ruby:2.5.3-node-browsers
+  "ruby-2.6":
+    <<: *shared
+    docker:
+      - image: circleci/ruby:2.6.1-node-browsers
   "jruby-9.1":
     <<: *shared
     docker:
@@ -53,8 +61,22 @@ workflows:
   version: 2
   build:
     jobs:
-      - "ruby-2.3"
-      - "ruby-2.4"
-      - "ruby-2.5"
-      - "jruby-9.1"
-      - "jruby-9.2"
+      - rubocop
+      - ruby-2.3:
+          requires:
+            - rubocop
+      - ruby-2.4:
+          requires:
+            - rubocop
+      - ruby-2.5:
+          requires:
+            - rubocop
+      - ruby-2.6:
+          requires:
+            - rubocop
+      - jruby-9.1:
+          requires:
+            - rubocop
+      - jruby-9.2:
+          requires:
+            - rubocop
