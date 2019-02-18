@@ -20,37 +20,41 @@ shared: &shared
 
 jobs:
   "rubocop":
+    docker:
+      - image: circleci/ruby:2.6.1-node-browsers
     steps:
       - checkout
       - run:
           name: Install dependencies
-          command: bundle install --jobs=4 --retry=3 --path vendor/bundle
-      - run: bundle exec rubocop
-    docker:
-      - image: circleci/ruby:2.6.1-node-browsers
-  "ruby-2.3":
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - run:
+          name: RuboCop
+          command: |
+            bundle exec rubocop
+  "ruby-23":
     <<: *shared
     docker:
       - image: circleci/ruby:2.3.8-node-browsers
-  "ruby-2.4":
+  "ruby-24":
     <<: *shared
     docker:
       - image: circleci/ruby:2.4.5-node-browsers
-  "ruby-2.5":
+  "ruby-25":
     <<: *shared
     docker:
       - image: circleci/ruby:2.5.3-node-browsers
-  "ruby-2.6":
+  "ruby-26":
     <<: *shared
     docker:
       - image: circleci/ruby:2.6.1-node-browsers
-  "jruby-9.1":
+  "jruby-91":
     <<: *shared
     docker:
       - image: circleci/jruby:9.1-jdk
         environment:
           JRUBY_OPTS: "--debug"
-  "jruby-9.2":
+  "jruby-92":
     <<: *shared
     docker:
       - image: circleci/jruby:9.2-jdk
@@ -62,21 +66,21 @@ workflows:
   build:
     jobs:
       - rubocop
-      - "ruby-2.3":
+      - "ruby-23":
           requires:
             - rubocop
-      - "ruby-2.4":
+      - "ruby-24":
           requires:
             - rubocop
-      - "ruby-2.5":
+      - "ruby-25":
           requires:
             - rubocop
-      - "ruby-2.6":
+      - "ruby-26":
           requires:
             - rubocop
-      - "jruby-9.1":
+      - "jruby-91":
           requires:
             - rubocop
-      - "jruby-9.2":
+      - "jruby-92":
           requires:
             - rubocop
