@@ -62,21 +62,21 @@ workflows:
   build:
     jobs:
       - rubocop
-      - ruby-2.3:
+      - "ruby-2.3":
           requires:
             - rubocop
-      - ruby-2.4:
+      - "ruby-2.4":
           requires:
             - rubocop
-      - ruby-2.5:
+      - "ruby-2.5":
           requires:
             - rubocop
-      - ruby-2.6:
+      - "ruby-2.6":
           requires:
             - rubocop
-      - jruby-9.1:
+      - "jruby-9.1":
           requires:
             - rubocop
-      - jruby-9.2:
+      - "jruby-9.2":
           requires:
             - rubocop
